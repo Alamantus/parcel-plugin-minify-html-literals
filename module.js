@@ -10,9 +10,16 @@ class minifyHtmlJSAsset extends JSAsset {
   }
 
   parse(code) {
+    let customMinifyHtmlLiteralsConfig = {};
+    try {
+      customMinifyHtmlLiteralsConfig = require('../../.minifyhtmlliteralsrc');
+    } catch (ex) {}
+    console.log(customMinifyHtmlLiteralsConfig);
+
     if (!this.name.includes('node_modules')) {
       const minified = minify.minifyHTMLLiterals(code, {
         fileName: this.name,
+        minifyOptions: Object.assign({}, minify.defaultMinifyOptions, customMinifyHtmlLiteralsConfig),
       });
       this.contents = minified.code;
     }
